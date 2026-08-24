@@ -12,7 +12,7 @@ book:
   repo-actions: [edit, issue]
   repo-branch: main
   downloads: [pdf]
-  sharing: [twitter, linkedin]
+  sharing: [linkedin]
   page-navigation: true
   sidebar:
     style: docked
