@@ -1,0 +1,25 @@
+---
+title: "Preface · How to use this site"
+---
+
+## What this course is about
+
+Mathematical modeling is the practice of making assumptions explicit, translating them into mathematics, and using analysis or computation to answer questions about a system. The notebooks move between those three activities repeatedly:
+
+1. identify a question and a useful notion of success;
+2. state assumptions and formulate a model;
+3. implement, visualize, test, and interpret the result.
+
+The goal is not to produce a model that is “true” in every detail. A useful model is one whose assumptions and limitations are clear enough that its conclusions can be evaluated.
+
+## Reading the lectures
+
+The lecture pages contain a mixture of narrative, mathematical notation, executable Python, and discussion prompts. Try to predict what a calculation or plot should show before running the code. That habit is often more valuable than memorizing a particular library function.
+
+The repository also contains homework notebooks, instructor versions, exported HTML, data, and figures. The sidebar intentionally focuses on the student-facing lecture sequence; the additional materials remain available in the source repository.
+
+::: {.callout-tip}
+## Find a problem first
+
+When you encounter a new technique, ask what modeling problem it helps solve. ODE solvers, singular value decompositions, regression, and neural networks are tools; the interpretation of their output is the mathematical work.
+:::

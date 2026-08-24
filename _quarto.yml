@@ -1,0 +1,87 @@
+project:
+  type: book
+  output-dir: _site
+
+book:
+  title: "Mathematical Modeling with Technology"
+  subtitle: "Lectures, computational experiments, and projects in Python"
+  author: "Mario Bañuelos, Ph.D."
+  date: last-modified
+  site-url: https://mbanuelos.github.io/grad_math_modeling/
+  repo-url: https://github.com/mbanuelos/grad_math_modeling
+  repo-actions: [edit, issue]
+  repo-branch: main
+  downloads: [pdf]
+  sharing: [twitter, linkedin]
+  page-navigation: true
+  sidebar:
+    style: docked
+    search: true
+    collapse-level: 1
+  chapters:
+    - index.qmd
+    - preface.qmd
+    - Lectures/00_Introduction_Syllabus.ipynb
+    - part: "Module 0 · Time series and forecasting"
+      chapters:
+        - Lectures/Module0_TimeSeries/01_TimeSeriesFoundations.ipynb
+        - Lectures/Module0_TimeSeries/02_StationarityAndTransformations.ipynb
+        - Lectures/Module0_TimeSeries/03_AutocorrelationAndDiagnostics.ipynb
+        - Lectures/Module0_TimeSeries/04_AutoregressiveModels.ipynb
+        - Lectures/Module0_TimeSeries/05_AROrderAndFitting.ipynb
+        - Lectures/Module0_TimeSeries/06_LagEmbeddedFeatures.ipynb
+        - Lectures/Module0_TimeSeries/07_TimeAwareEvaluation.ipynb
+        - Lectures/Module0_TimeSeries/08_TreeBasedForecasting.ipynb
+        - Lectures/Module0_TimeSeries/09_MLPForecasting.ipynb
+        - Lectures/Module0_TimeSeries/10_SequenceModels.ipynb
+        - Lectures/Module0_TimeSeries/11_ExogenousVariables.ipynb
+        - Lectures/Module0_TimeSeries/12_ExogenousLagMatrices.ipynb
+        - Lectures/Module0_TimeSeries/13_ExogenousNeuralForecasting.ipynb
+    - part: "Module 1 · Biology, disease, and dynamical systems"
+      chapters:
+        - Lectures/Module1_BiologyDisease/01_Python_SolvingODEs.ipynb
+        - Lectures/Module1_BiologyDisease/02_Lawof_Mass_Action.ipynb
+        - Lectures/Module1_BiologyDisease/03_Numerical_ODE_Solutions.ipynb
+        - Lectures/Module1_BiologyDisease/04_LotkaVolterra.ipynb
+        - Lectures/Module1_BiologyDisease/05_Stability_Analysis.ipynb
+        - Lectures/Module1_BiologyDisease/06_SI_SIRModels.ipynb
+        - Lectures/Module1_BiologyDisease/07_SI_SIRModels-2.ipynb
+        - Lectures/Module1_BiologyDisease/08_DifferenceEquations.ipynb
+    - part: "Module 2 · Data, similarity, and regression"
+      chapters:
+        - Lectures/Module2_DataSimilarity/08_LinearAlgebraReview_SVD.ipynb
+        - Lectures/Module2_DataSimilarity/09_SVD_Recommendation.ipynb
+        - Lectures/Module2_DataSimilarity/10_PCA_MNIST.ipynb
+        - Lectures/Module2_DataSimilarity/11_LinearRegression_GradDescent.ipynb
+        - Lectures/Module2_DataSimilarity/12_MLR.ipynb
+        - Lectures/Module2_DataSimilarity/13_MLR_TestTrain_Part2.ipynb
+        - Lectures/Module2_DataSimilarity/14_PCR.ipynb
+    - part: "Module 3 · Deep learning with PyTorch"
+      chapters:
+        - Lectures/Module3_DeepLearning/15_IntroToPytorch.ipynb
+        - Lectures/Module3_DeepLearning/17_PyTorch_NN.ipynb
+        - Lectures/Module3_DeepLearning/18_LogisticReg.ipynb
+        - Lectures/Module3_DeepLearning/19_DefiningNNs.ipynb
+        - Lectures/Module3_DeepLearning/20_IntroGoogleColab_FastAI.ipynb
+
+format:
+  html:
+    theme: cosmo
+    css: styles.css
+    toc: true
+    toc-depth: 3
+    code-tools: true
+    html-math-method: katex
+    smooth-scroll: true
+    link-external-newwindow: true
+    respect-user-color-scheme: true
+
+execute:
+  enabled: false
+  freeze: auto
+
+launch:
+  colab: true
+
+language:
+  title-block-author-single: "Author"

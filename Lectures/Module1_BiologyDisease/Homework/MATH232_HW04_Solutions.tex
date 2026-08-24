@@ -1,0 +1,106 @@
+\documentclass[11pt]{amsart}
+\usepackage{geometry}                % See geometry.pdf to learn the layout options. There are lots.
+\geometry{letterpaper}                   % ... or a4paper or a5paper or ... 
+%\geometry{landscape}                % Activate for for rotated page geometry
+%\usepackage[parfill]{parskip}    % Activate to begin paragraphs with an empty line rather than an indent
+\usepackage{graphicx}
+\usepackage{amssymb}
+\usepackage{enumerate}
+\usepackage{epstopdf}
+\DeclareGraphicsRule{.tif}{png}{.png}{`convert #1 `dirname #1`/`basename #1 .tif`.png}
+
+\title{MATH 232 - HW 04 Solutions}
+\author{M. Banuelos}
+%\date{}                                           % Activate to display a given date or no date
+
+\begin{document}
+\maketitle
+%\section{}
+%\subsection{}
+
+
+\noindent {\bf Prion Dynamics Revisited}\\
+
+Last time we discussed prions, we derived the equations for the concentrations of monomers and aggregates. After some change of variables (involving moment-closure and non-dimensionalization), we arrive at the following 3 differential equations
+
+\begin{align*} x' &= a(1-x) - bxy + n(n-1)y,\\ 
+y' &= -(a+2n-1)y + z,\\ z' &= -az + bxy - n(n-1)y,
+\\ 
+\end{align*} 
+
+
+where $a = \frac{\mu}{\gamma}, b = \frac{2 \alpha \beta}{\gamma \mu}$. We also note that $n$ is the minimum number size for aggregates to form, $x$ represents the concentration of monomers, $y$ represents the total number of aggregates present, and $z$ represents the total mass of aggregated protein.
+
+\begin{enumerate}[a)]
+\item Show that the equilibrium points for the system are
+$$ (1,0,0) \quad\text{and}\quad \left(\frac{(a+n)(a+n-1)}{b}, \frac{z}{(a+2n-1)}, 1-x\right) $$ 
+
+\noindent {\bf Solution.} We set each ODE equal to zero:
+
+\begin{align} 
+a(1-x) - bxy + n(n-1)y &=0, \\ 
+-(a+2n-1)y + z &=0, \text{ and} \\ 
+-az + bxy - n(n-1)y &=0. 
+\end{align}
+
+Adding Equations (1) and (2) together, we find that $a(1-x)-az=0$, which means that $a(1-x-z)=0$ and thus $z=1-x$. Moreover, from Equation (2), we have that $$ y = \frac{z}{a+2n-1}.$$ From Equation (1), we have 
+
+\begin{align*} a(1-x)-bxy+n(n-1)y &= 0 \\ 
+a(1-x)-bx \frac{1-x}{a+2n-1}+\frac{n(n-1)(1-x)}{a+2n-1} &=0 \\ 
+a(1-x)-bx (1-x)+n(n-1)(1-x) &=0 \\ 
+(1-x) (a(a+2n-1)-bx+n(n-1)) &=0, 
+\end{align*} 
+which means that $x=1$ or $x = (a(a+2n-1)+n(n-1))/b = (a^2+2an-a+n^2-n)/b = (a+n)(a+n-1)/b$.
+So, if $x=1$, we get the fixed point $(1,0,0)$; otherwise, we get the fixed point $\left(\frac{(a+n)(a+n-1)}{b}, \frac{z}{(a+2n-1)}, 1-x\right)$.
+
+\item What do each of the equilibrium points represent?
+
+\noindent {\bf Solution.} The first equilibrium point represents when there are no aggregates formed yet, so we only have protein monomers in the system, since there have not yet been any aggregates made. The second equilibrium point represents a particular concentration of aggregates that have formed, with $z=1-x$ meaning that $x$ amount of monomers have been used to form aggregated proteins and $y = z/(a+2n-1) = (1-x)/(a+2n-1)$ is the fraction of that mass which represents the total number of aggregates. Such a concentration of aggregates allows the system to enter steady state.
+
+\item For the second equilibrium point, calculate and evaluate the Jacobian at this point.
+
+\noindent {\bf Solution.} We calculate the Jacobian associated with this system to find that $$ J = \begin{bmatrix} -a-b y & (n-1) n-b x & 0 \\ 0 & -a-2 n+1 & 1 \\ b y & b x-(n-1) n & -a \\ \end{bmatrix}. $$ Then, the second equilibrium point $E_2$, we get that $$ J_{E_2} = \begin{bmatrix} \frac{(n-1) n-b}{a+2 n-1} & -a (a+2 n-1) & 0 \\ 0 & -a-2 n+1 & 1 \\ \frac{b-(a+n-1) (a+n)}{a+2 n-1} & a (a+2 n-1) & -a \\ \end{bmatrix}. $$
+
+\item Show that the system is locally stable if
+$$ (a + n - 1) (a + n) < b $$
+Hint: In other words, when do all the eigenvalues have to have negative real parts?
+
+\noindent {\bf Solution.} We find that the eigenvalues of this system are given by 
+
+\begin{align*} \lambda_1 &= \frac{-a^2-2 a n+a}{a+2 n-1} = -a, \\ 
+\lambda_{2,3} &= \frac{1}{2 (a+2 n-1)} \left( -a^2-4 a n+2 a-b-3 n^2+3 n-1 \right.\\
+&\pm(5 a^4+32 a^3 n-16 a^3-2 a^2 b+74 a^2 n^2-74 a^2 n+18 a^2-8 a b n\\ 
+&\left. +4 a b+72 a n^3-108 a n^2+52 a n-8 a+b^2-10 b n^2+10 b n-2 b+25 n^4-50 n^3+35 n^2-10 n+1)^{1/2}\right). 
+\end{align*}
+Assume that $(a+n-1)(a+n)<b$. We will show that this implies that the real parts of all of the eigenvalues will be negative.
+
+Notice that since $a>0$, we have $$ \lambda_1 = - \left( \frac{a^2+2an-a}{a+2n-1} \right) = - \left( \frac{a(a+2n-1)}{a+2n-1} \right) = -a < 0. $$
+
+For $\lambda_{2,3}$, if the number under the radical is negative (i.e., produces a complex root), then we only need to consider the real part of it. So, we note that 
+\begin{align*} \frac{-a^2-4 a n+2 a-b-3 n^2+3 n-1}{2(a+2n-1)} &< -a^2-4 a n+2 a-b-3 n^2+3 n-1 \\ 
+&< -a^2-4 a n+2 a-(a+n)(a+n-1)-3 n^2+3 n-1 \\ 
+&= -(1-2n)^2 + a(3-6n)-2a^2 \\ 
+&< -(1-2n)^2 + a(-6n)-2a^2 \\ 
+&< 0. \end{align*}
+
+On the other hand, if it is positive, then we need to show that the real part is negative. To do this, we need to show that the square root portion of the eigenvalue is smaller in magnitude than the part that is outside of the square root. If we assume that $(a+n-1)(a+n)<b$, we can set b=(a+n-1)(a+n) + epsilon. Substituting this in, we can show that the eigenvalues have to be negative (for example, by setting some maximum value). Therefore, since the eigenvalues are always negative when $(a+n)(a+n-1)<b$, we conclude that this condition on the constants will lead to a local stable point.\\
+
+{\it For this part, I will be looking for more of the rationale.\\}
+
+\item Consider the following change of variables,
+$$ S(t) = x(t),\; E(t) = z(t) - n y(t),\; I(t) = n y(t) $$
+and write the resulting system of ODEs.
+
+\noindent {\bf Solution.} Observe that $S' = x'$, $E' = z'-ny'$, and $I' = ny'$. This means that $z' = E'+I'$ and $y' = I'/n$. Hence, the system of ODEs becomes 
+
+\begin{align*} S' &= a(1-S) - \frac{b}{n} S I + (n-1)I \\ I' &= -(a+2n-1)I + n(E+I) \\ E' &= -a(E+I) + \frac{b}{n} SI - (n-1)I + (a+2n-1)I - n(E+I) \\ &= -(a+n) E+\frac{b SI}{n} 
+\end{align*} where the last ODE follows from the fact that $E' + I' = -a(E+I) + \frac{b}{n} SI - (n-1) I$ and we can substite what we found for $I'$ into the system.
+
+\item Global stability analysis of this system results in
+$$ R_0 = \frac{b}{(a+n)(a+n-1)}. $$
+With your knowledge of $R_0$ and SIR models, what can you conclude? How does it relate to part d)?
+
+\noindent {\bf Solution.} Notice that $R_0$ is the inverse of the $x$ component of the second equilibrium point from the original system. In part (d), we found that the system would be stable if $(a+n)(a+n-1)<b$; so, with this value of $R_0$, this implies that $R_0>1$ in this scenario, meaning that it is likely that there will be new members of the prion party.
+If $R_0<1$, then we have that $b < (a+n)(a+n-1)$, which is unstable by our above discussion and implies that it is unlikely that there will be new members of the prion party.
+\end{enumerate}
+\end{document}  

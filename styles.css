@@ -1,0 +1,29 @@
+/* Small layer of course-specific styling on top of the Quarto theme. */
+:root {
+  --course-blue: #155e75;
+  --course-orange: #c2410c;
+}
+
+.navbar-brand, .sidebar-title {
+  font-weight: 700;
+}
+
+.quarto-title h1, .quarto-title-block .title {
+  color: var(--course-blue);
+}
+
+.quarto-title-block .subtitle {
+  color: var(--course-orange);
+}
+
+.sidebar nav[role="doc-toc"] > ul > li > a {
+  font-size: 0.94rem;
+}
+
+.callout {
+  border-radius: 0.45rem;
+}
+
+pre.sourceCode {
+  border-left: 3px solid var(--course-blue);
+}
