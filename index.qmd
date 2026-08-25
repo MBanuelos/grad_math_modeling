@@ -1,14 +1,6 @@
 ---
 title: "Mathematical Modeling with Technology"
 subtitle: "Computational lectures for applied mathematics"
-about:
-  template: jolla
-  image: Lectures/Module3_DeepLearning/whatisatensor.png
-  image-shape: round
-  links:
-    - icon: github
-      text: Source repository
-      href: https://github.com/mbanuelos/grad_math_modeling
 ---
 
 Welcome! This site collects lecture notebooks for a course in mathematical modeling, data analysis, and machine learning. The central idea is simple: use mathematics and computation together to investigate real-world phenomena.
@@ -17,9 +9,10 @@ Welcome! This site collects lecture notebooks for a course in mathematical model
 
 Use the navigation sidebar to move through the course, or begin with the [course preface](preface.qmd). Each lecture is a rendered Jupyter notebook with its explanations, equations, code, figures, and saved outputs.
 
-The course is organized into three connected modules:
+The course is organized into four modules:
 
-- **Biology, disease, and dynamical systems** — translate mechanisms into differential and difference equations, then analyze and simulate them.
+- **Time series and forecasting** - model and forecast future trends of seasonal (and non-seasonal) data with statistical and machine learning approaches.
+- **Biology, disease, and systems** — translate mechanisms into differential and difference equations, then analyze and simulate them.
 - **Data, similarity, and regression** — use linear algebra, SVD, PCA, and regression to discover structure in data.
 - **Deep learning with PyTorch** — build intuition for tensors, automatic differentiation, optimization, and neural networks.
 
