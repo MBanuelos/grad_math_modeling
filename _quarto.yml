@@ -5,6 +5,7 @@ project:
 book:
   title: "Mathematical Modeling with Technology"
   subtitle: "Lectures, computational experiments, and projects in Python"
+  logo: mm_grad_logo.png
   author: "Mario Bañuelos, Ph.D."
   date: last-modified
   site-url: https://mbanuelos.github.io/grad_math_modeling/
