@@ -2,146 +2,146 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://mbanuelos.github.io/grad_math_modeling/index.html</loc>
-    <lastmod>2026-08-24T23:29:21.547Z</lastmod>
+    <lastmod>2026-08-25T07:19:13.730Z</lastmod>
   </url>
   <url>
     <loc>https://mbanuelos.github.io/grad_math_modeling/preface.html</loc>
-    <lastmod>2026-08-24T23:29:21.547Z</lastmod>
+    <lastmod>2026-08-25T07:19:13.730Z</lastmod>
   </url>
   <url>
     <loc>https://mbanuelos.github.io/grad_math_modeling/Lectures/00_Introduction_Syllabus.html</loc>
-    <lastmod>2026-08-24T23:29:20.829Z</lastmod>
+    <lastmod>2026-08-25T07:19:13.301Z</lastmod>
   </url>
   <url>
     <loc>https://mbanuelos.github.io/grad_math_modeling/Lectures/Module0_TimeSeries/01_TimeSeriesFoundations.html</loc>
-    <lastmod>2026-08-24T23:29:20.830Z</lastmod>
+    <lastmod>2026-08-25T07:19:13.303Z</lastmod>
   </url>
   <url>
     <loc>https://mbanuelos.github.io/grad_math_modeling/Lectures/Module0_TimeSeries/02_StationarityAndTransformations.html</loc>
-    <lastmod>2026-08-24T23:29:20.841Z</lastmod>
+    <lastmod>2026-08-25T07:19:13.303Z</lastmod>
   </url>
   <url>
     <loc>https://mbanuelos.github.io/grad_math_modeling/Lectures/Module0_TimeSeries/03_AutocorrelationAndDiagnostics.html</loc>
-    <lastmod>2026-08-24T23:29:20.848Z</lastmod>
+    <lastmod>2026-08-25T07:19:13.303Z</lastmod>
   </url>
   <url>
     <loc>https://mbanuelos.github.io/grad_math_modeling/Lectures/Module0_TimeSeries/04_AutoregressiveModels.html</loc>
-    <lastmod>2026-08-24T23:29:20.856Z</lastmod>
+    <lastmod>2026-08-25T07:19:13.304Z</lastmod>
   </url>
   <url>
     <loc>https://mbanuelos.github.io/grad_math_modeling/Lectures/Module0_TimeSeries/05_AROrderAndFitting.html</loc>
-    <lastmod>2026-08-24T23:29:20.862Z</lastmod>
+    <lastmod>2026-08-25T07:19:13.304Z</lastmod>
   </url>
   <url>
     <loc>https://mbanuelos.github.io/grad_math_modeling/Lectures/Module0_TimeSeries/06_LagEmbeddedFeatures.html</loc>
-    <lastmod>2026-08-24T23:29:20.864Z</lastmod>
+    <lastmod>2026-08-25T07:19:13.304Z</lastmod>
   </url>
   <url>
     <loc>https://mbanuelos.github.io/grad_math_modeling/Lectures/Module0_TimeSeries/07_TimeAwareEvaluation.html</loc>
-    <lastmod>2026-08-24T23:29:20.864Z</lastmod>
+    <lastmod>2026-08-25T07:19:13.304Z</lastmod>
   </url>
   <url>
     <loc>https://mbanuelos.github.io/grad_math_modeling/Lectures/Module0_TimeSeries/08_TreeBasedForecasting.html</loc>
-    <lastmod>2026-08-24T23:29:20.865Z</lastmod>
+    <lastmod>2026-08-25T07:19:13.304Z</lastmod>
   </url>
   <url>
     <loc>https://mbanuelos.github.io/grad_math_modeling/Lectures/Module0_TimeSeries/09_MLPForecasting.html</loc>
-    <lastmod>2026-08-24T23:29:20.868Z</lastmod>
+    <lastmod>2026-08-25T07:19:13.304Z</lastmod>
   </url>
   <url>
     <loc>https://mbanuelos.github.io/grad_math_modeling/Lectures/Module0_TimeSeries/10_SequenceModels.html</loc>
-    <lastmod>2026-08-24T23:29:20.870Z</lastmod>
+    <lastmod>2026-08-25T07:19:13.304Z</lastmod>
   </url>
   <url>
     <loc>https://mbanuelos.github.io/grad_math_modeling/Lectures/Module0_TimeSeries/11_ExogenousVariables.html</loc>
-    <lastmod>2026-08-24T23:29:20.875Z</lastmod>
+    <lastmod>2026-08-25T07:19:13.304Z</lastmod>
   </url>
   <url>
     <loc>https://mbanuelos.github.io/grad_math_modeling/Lectures/Module0_TimeSeries/12_ExogenousLagMatrices.html</loc>
-    <lastmod>2026-08-24T23:29:20.876Z</lastmod>
+    <lastmod>2026-08-25T07:19:13.304Z</lastmod>
   </url>
   <url>
     <loc>https://mbanuelos.github.io/grad_math_modeling/Lectures/Module0_TimeSeries/13_ExogenousNeuralForecasting.html</loc>
-    <lastmod>2026-08-24T23:29:20.876Z</lastmod>
+    <lastmod>2026-08-25T07:19:13.305Z</lastmod>
   </url>
   <url>
     <loc>https://mbanuelos.github.io/grad_math_modeling/Lectures/Module1_BiologyDisease/01_Python_SolvingODEs.html</loc>
-    <lastmod>2026-08-24T23:29:20.941Z</lastmod>
+    <lastmod>2026-08-25T07:19:13.306Z</lastmod>
   </url>
   <url>
     <loc>https://mbanuelos.github.io/grad_math_modeling/Lectures/Module1_BiologyDisease/02_Lawof_Mass_Action.html</loc>
-    <lastmod>2026-08-24T23:29:20.941Z</lastmod>
+    <lastmod>2026-08-25T07:19:13.307Z</lastmod>
   </url>
   <url>
     <loc>https://mbanuelos.github.io/grad_math_modeling/Lectures/Module1_BiologyDisease/03_Numerical_ODE_Solutions.html</loc>
-    <lastmod>2026-08-24T23:29:21.001Z</lastmod>
+    <lastmod>2026-08-25T07:19:13.343Z</lastmod>
   </url>
   <url>
     <loc>https://mbanuelos.github.io/grad_math_modeling/Lectures/Module1_BiologyDisease/04_LotkaVolterra.html</loc>
-    <lastmod>2026-08-24T23:29:21.001Z</lastmod>
+    <lastmod>2026-08-25T07:19:13.343Z</lastmod>
   </url>
   <url>
     <loc>https://mbanuelos.github.io/grad_math_modeling/Lectures/Module1_BiologyDisease/05_Stability_Analysis.html</loc>
-    <lastmod>2026-08-24T23:29:21.001Z</lastmod>
+    <lastmod>2026-08-25T07:19:13.343Z</lastmod>
   </url>
   <url>
     <loc>https://mbanuelos.github.io/grad_math_modeling/Lectures/Module1_BiologyDisease/06_SI_SIRModels.html</loc>
-    <lastmod>2026-08-24T23:29:21.003Z</lastmod>
+    <lastmod>2026-08-25T07:19:13.345Z</lastmod>
   </url>
   <url>
     <loc>https://mbanuelos.github.io/grad_math_modeling/Lectures/Module1_BiologyDisease/07_SI_SIRModels-2.html</loc>
-    <lastmod>2026-08-24T23:29:21.027Z</lastmod>
+    <lastmod>2026-08-25T07:19:13.376Z</lastmod>
   </url>
   <url>
     <loc>https://mbanuelos.github.io/grad_math_modeling/Lectures/Module1_BiologyDisease/08_DifferenceEquations.html</loc>
-    <lastmod>2026-08-24T23:29:21.027Z</lastmod>
+    <lastmod>2026-08-25T07:19:13.376Z</lastmod>
   </url>
   <url>
     <loc>https://mbanuelos.github.io/grad_math_modeling/Lectures/Module2_DataSimilarity/08_LinearAlgebraReview_SVD.html</loc>
-    <lastmod>2026-08-24T23:29:21.285Z</lastmod>
+    <lastmod>2026-08-25T07:19:13.588Z</lastmod>
   </url>
   <url>
     <loc>https://mbanuelos.github.io/grad_math_modeling/Lectures/Module2_DataSimilarity/09_SVD_Recommendation.html</loc>
-    <lastmod>2026-08-24T23:29:21.285Z</lastmod>
+    <lastmod>2026-08-25T07:19:13.588Z</lastmod>
   </url>
   <url>
     <loc>https://mbanuelos.github.io/grad_math_modeling/Lectures/Module2_DataSimilarity/10_PCA_MNIST.html</loc>
-    <lastmod>2026-08-24T23:29:21.317Z</lastmod>
+    <lastmod>2026-08-25T07:19:13.592Z</lastmod>
   </url>
   <url>
     <loc>https://mbanuelos.github.io/grad_math_modeling/Lectures/Module2_DataSimilarity/11_LinearRegression_GradDescent.html</loc>
-    <lastmod>2026-08-24T23:29:21.364Z</lastmod>
+    <lastmod>2026-08-25T07:19:13.597Z</lastmod>
   </url>
   <url>
     <loc>https://mbanuelos.github.io/grad_math_modeling/Lectures/Module2_DataSimilarity/12_MLR.html</loc>
-    <lastmod>2026-08-24T23:29:21.365Z</lastmod>
+    <lastmod>2026-08-25T07:19:13.598Z</lastmod>
   </url>
   <url>
     <loc>https://mbanuelos.github.io/grad_math_modeling/Lectures/Module2_DataSimilarity/13_MLR_TestTrain_Part2.html</loc>
-    <lastmod>2026-08-24T23:29:21.396Z</lastmod>
+    <lastmod>2026-08-25T07:19:13.621Z</lastmod>
   </url>
   <url>
     <loc>https://mbanuelos.github.io/grad_math_modeling/Lectures/Module2_DataSimilarity/14_PCR.html</loc>
-    <lastmod>2026-08-24T23:29:21.413Z</lastmod>
+    <lastmod>2026-08-25T07:19:13.623Z</lastmod>
   </url>
   <url>
     <loc>https://mbanuelos.github.io/grad_math_modeling/Lectures/Module3_DeepLearning/15_IntroToPytorch.html</loc>
-    <lastmod>2026-08-24T23:29:21.534Z</lastmod>
+    <lastmod>2026-08-25T07:19:13.720Z</lastmod>
   </url>
   <url>
     <loc>https://mbanuelos.github.io/grad_math_modeling/Lectures/Module3_DeepLearning/17_PyTorch_NN.html</loc>
-    <lastmod>2026-08-24T23:29:21.534Z</lastmod>
+    <lastmod>2026-08-25T07:19:13.720Z</lastmod>
   </url>
   <url>
     <loc>https://mbanuelos.github.io/grad_math_modeling/Lectures/Module3_DeepLearning/18_LogisticReg.html</loc>
-    <lastmod>2026-08-24T23:29:21.540Z</lastmod>
+    <lastmod>2026-08-25T07:19:13.723Z</lastmod>
   </url>
   <url>
     <loc>https://mbanuelos.github.io/grad_math_modeling/Lectures/Module3_DeepLearning/19_DefiningNNs.html</loc>
-    <lastmod>2026-08-24T23:29:21.540Z</lastmod>
+    <lastmod>2026-08-25T07:19:13.724Z</lastmod>
   </url>
   <url>
     <loc>https://mbanuelos.github.io/grad_math_modeling/Lectures/Module3_DeepLearning/20_IntroGoogleColab_FastAI.html</loc>
-    <lastmod>2026-08-24T23:29:21.540Z</lastmod>
+    <lastmod>2026-08-25T07:19:13.724Z</lastmod>
   </url>
 </urlset>
