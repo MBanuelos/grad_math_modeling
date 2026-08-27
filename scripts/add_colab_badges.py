@@ -34,9 +34,9 @@ def badge_markdown(repo_url: str, branch: str, notebook_path: str) -> str:
     encoded_path = quote(notebook_path, safe="/")
     colab_url = (
         f"https://colab.research.google.com/github/{repo_path}/blob/"
-        f"{branch}/{encoded_path}"
+        f"{branch}/{encoded_path}#copy=true"
     )
-    return f"[![Open In Colab]({BADGE_ASSET})]({colab_url})"
+    return f"[![]({BADGE_ASSET})]({colab_url})"
 
 
 def add_or_update_badge(path: Path, markdown: str) -> None:

@@ -443,8 +443,8 @@ By the end of this lesson, you should be able to:
 
 def colab_cell(lesson: Lesson) -> nbformat.NotebookNode:
     markdown = (
-        f"[![Open In Colab]({COLAB_BADGE})]"
-        f"({COLAB_BASE}/{lesson.filename}.ipynb)"
+        f"[![]({COLAB_BADGE})]"
+        f"({COLAB_BASE}/{lesson.filename}.ipynb#copy=true)"
     )
     cell = nbformat.v4.new_markdown_cell(markdown)
     cell.id = "open-in-colab"
