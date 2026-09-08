@@ -418,17 +418,23 @@ def intro_cell(lesson: Lesson, instructor: bool) -> nbformat.NotebookNode:
         if instructor
         else ""
     )
-    prerequisite = (
-        f"\n**Prerequisite:** {lesson.prerequisite}  \n" if lesson.prerequisite else ""
-    )
     goals = "\n".join(f"- {objective}" for objective in lesson.objectives)
-    source = f"Original Day {lesson.source_day}"
+    metadata = ""
+    if lesson.number < 4:
+        prerequisite = (
+            f"**Prerequisite:** {lesson.prerequisite}  \n"
+            if lesson.prerequisite
+            else ""
+        )
+        metadata = (
+            f"**Module 0 · Lesson {lesson.number} of {len(LESSONS)} · {audience}**  \n"
+            f"**Estimated class time:** {lesson.minutes} minutes  \n"
+            f"**Source sequence:** Original Day {lesson.source_day}  \n"
+            f"{prerequisite}\n"
+        )
     text = f"""# {'📋 INSTRUCTOR NOTEBOOK — ' if instructor else ''}{lesson.title}
 
-**Module 0 · Lesson {lesson.number} of {len(LESSONS)} · {audience}**  
-**Estimated class time:** {lesson.minutes} minutes  
-**Source sequence:** {source}  
-{prerequisite}{warning}
+{metadata}{warning}
 ## Learning objectives
 
 By the end of this lesson, you should be able to:
