@@ -49,15 +49,14 @@ book:
         - Lectures/Module1_BiologyDisease/06_SI_SIRModels.ipynb
         - Lectures/Module1_BiologyDisease/07_SI_SIRModels-2.ipynb
         - Lectures/Module1_BiologyDisease/08_DifferenceEquations.ipynb
-    - part: "Module 2 · Data, similarity, and regression"
+    - part: "Module 2 · Supervised learning, language, and similarity"
       chapters:
-        - Lectures/Module2_DataSimilarity/08_LinearAlgebraReview_SVD.ipynb
-        - Lectures/Module2_DataSimilarity/09_SVD_Recommendation.ipynb
-        - Lectures/Module2_DataSimilarity/10_PCA_MNIST.ipynb
-        - Lectures/Module2_DataSimilarity/11_LinearRegression_GradDescent.ipynb
-        - Lectures/Module2_DataSimilarity/12_MLR.ipynb
-        - Lectures/Module2_DataSimilarity/13_MLR_TestTrain_Part2.ipynb
-        - Lectures/Module2_DataSimilarity/14_PCR.ipynb
+        - Lectures/Module2_DataSimilarity/01_SupervisedLearning.ipynb
+        - Lectures/Module2_DataSimilarity/02_NLP_TFIDF.ipynb
+        - Lectures/Module2_DataSimilarity/03_NLP_SentimentAnalysis.ipynb
+        - Lectures/Module2_DataSimilarity/04_DimensionReduction_PCA.ipynb
+        - Lectures/Module2_DataSimilarity/05_Similarity_SVD.ipynb
+        - Lectures/Module2_DataSimilarity/06_RecommendationSystems.ipynb
     - part: "Module 3 · Deep learning with PyTorch"
       chapters:
         - Lectures/Module3_DeepLearning/15_IntroToPytorch.ipynb

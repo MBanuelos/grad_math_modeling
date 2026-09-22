@@ -13,7 +13,7 @@ The course is organized into four modules:
 
 - **Time series and forecasting** - model and forecast future trends of seasonal (and non-seasonal) data with statistical and machine learning approaches.
 - **Biology, disease, and systems** — translate mechanisms into differential and difference equations, then analyze and simulate them.
-- **Data, similarity, and regression** — use linear algebra, SVD, PCA, and regression to discover structure in data.
+- **Supervised learning, language, and similarity** — build and evaluate regression models; represent and classify text with TF–IDF; then use PCA, SVD, similarity, and recommendations to discover structure in data.
 - **Deep learning with PyTorch** — build intuition for tensors, automatic differentiation, optimization, and neural networks.
 
 ## Working with the notebooks
