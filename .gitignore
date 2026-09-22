@@ -7,3 +7,9 @@
 # Keep instructor-only notebooks local; do not include them in GitHub.
 **/*_instructor.ipynb
 **/*-INSTRUCTOR.ipynb
+
+# Local instructions for coding agents; intentionally not version-controlled.
+AGENTS.md
+
+# Locally generated instructor lecture notes for Module 2.
+Lectures/Module2_DataSimilarity/LectureNotes/
