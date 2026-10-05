@@ -57,6 +57,7 @@ book:
         - Lectures/Module2_DataSimilarity/04_DimensionReduction_PCA.ipynb
         - Lectures/Module2_DataSimilarity/05_Similarity_SVD.ipynb
         - Lectures/Module2_DataSimilarity/06_RecommendationSystems.ipynb
+        - Lectures/Module2_DataSimilarity/07_Module2_Practice.ipynb
     - part: "Module 3 · Deep learning with PyTorch"
       chapters:
         - Lectures/Module3_DeepLearning/15_IntroToPytorch.ipynb

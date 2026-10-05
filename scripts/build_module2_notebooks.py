@@ -30,6 +30,15 @@ def code(text: str) -> dict:
     }
 
 
+def student_markdown(text: str) -> dict:
+    """Create an ordinary student-facing Markdown cell (not an extension cell)."""
+    return {"cell_type": "markdown", "metadata": {}, "source": source(text)}
+
+
+def student_code(text: str) -> dict:
+    return {"cell_type": "code", "execution_count": None, "metadata": {}, "outputs": [], "source": source(text)}
+
+
 EXTENSIONS = {
     "01_SupervisedLearning.ipynb": [
         markdown(r"""## Part 3 — Residuals and the loss function
@@ -347,6 +356,7 @@ topic_documents = [
     "The chef prepared a warm soup with vegetables.",
 ]
 
+
 topic_vectorizer = TfidfVectorizer(stop_words="english")
 document_term = topic_vectorizer.fit_transform(topic_documents)
 print("document–term matrix shape:", document_term.shape)
@@ -393,6 +403,259 @@ plt.show()"""),
 
 PCA and truncated SVD share the dimension-reduction idea: find a small number of directions that retain important structure. PCA is commonly applied to centered dense features; truncated SVD is convenient for a sparse document–term matrix. Neither method “understands” language. Results depend on the corpus, preprocessing, number of components, and how people interpret the resulting term lists."""),
 ]
+PRACTICE_FILENAME = "07_Module2_Practice.ipynb"
+PRACTICE_CELLS = [
+    student_markdown("""[![](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/mbanuelos/grad_math_modeling/blob/main/Lectures/Module2_DataSimilarity/07_Module2_Practice.ipynb#copy=true)"""),
+    student_markdown("""# Module 2 Practice: From Features to Recommendations
+
+## Purpose
+
+This guided work session reviews the core Module 2 workflow without becoming a project. You will make predictions from numerical features, turn text into TF-IDF features, discover simple latent topics, and use similarity to suggest an item.
+
+## Learning objectives
+
+By the end of the session, you should be able to:
+
+- fit and evaluate a supervised regression model using a held-out test set;
+- build and interpret a document--term/TF--IDF matrix;
+- use truncated SVD to summarize text with latent topic directions;
+- calculate and explain cosine similarity in a small recommendation setting.
+
+**Student Learning Outcome:** Connect a data representation, a mathematical method, and an evaluation or interpretation appropriate to the task."""),
+    student_markdown("""Work with a partner when possible. A **checkpoint** means pause to compare reasoning, not merely output. Finish the starred extensions as homework if needed."""),
+    student_code("""import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+from pathlib import Path
+
+from sklearn.decomposition import TruncatedSVD
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.linear_model import LinearRegression, LogisticRegression
+from sklearn.metrics import ConfusionMatrixDisplay, mean_squared_error, r2_score
+from sklearn.metrics.pairwise import cosine_similarity
+from sklearn.model_selection import train_test_split
+from sklearn.pipeline import Pipeline
+
+RANDOM_STATE = 22
+print("Setup complete.")"""),
+    student_markdown("""## Part 1 — The feature-matrix map
+
+Across Module 2, the objects look different but share a common structure:
+
+| Task | rows | columns | target or output |
+|---|---|---|---|
+| Regression | observations | numerical features | numerical response |
+| TF--IDF | documents | terms/n-grams | often a label or similarity score |
+| PCA/SVD | observations/documents | features/terms | lower-dimensional coordinates |
+| Recommendations | items or users | users or items | neighbors or predicted ratings |
+
+### Warm-up
+
+For a movie-review classifier, what should one row represent? What should one column represent? What would the target be if the task is sentiment analysis?
+
+> **YOUR ANSWER:**"""),
+    student_markdown("""## Part 2 — Supervised learning: fit, test, interpret
+
+The local Advertising dataset records spending on TV, radio, and newspaper advertising along with product sales. We will fit a linear regression model to predict sales and reserve a test set for evaluation. Do not use the test set to choose or tune the model."""),
+    student_code("""data_path = Path("Advertising.csv")
+if not data_path.exists():
+    data_path = Path("Lectures/Module2_DataSimilarity/Advertising.csv")
+
+advertising = pd.read_csv(data_path)
+X = advertising[["TV", "radio", "newspaper"]]
+y = advertising["sales"]
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.25, random_state=RANDOM_STATE
+)
+
+print("features:", list(X.columns))
+print("training observations:", len(X_train))
+print("test observations:", len(X_test))"""),
+    student_markdown("""### Task 2A — Fit and evaluate
+
+Complete the two `TODO` lines. Then report test MSE and test $R^2$.
+
+> Hint: the model must be fitted only on `X_train, y_train`; use `predict(X_test)` afterward."""),
+    student_code("""model = LinearRegression()
+# TODO: fit model on the training data
+# TODO: create test_predictions from X_test
+
+# Uncomment after completing the TODOs.
+# print("test MSE:", round(mean_squared_error(y_test, test_predictions), 1))
+# print("test R²:", round(r2_score(y_test, test_predictions), 3))"""),
+    student_markdown("""### Checkpoint 2
+
+1. What does a lower MSE mean in this setting?
+2. Why is a low training MSE not enough evidence that the model generalizes?
+3. Which feature coefficient would you be careful not to interpret causally, and why?
+
+> **YOUR ANSWER:**"""),
+    student_markdown("""### Optional homework extension 2*
+
+Fit a model using only the first two features. Compare its test MSE with the full model. Write 3--4 sentences explaining why adding features can improve, worsen, or leave unchanged test performance."""),
+    student_markdown("""## Part 3 — NLP: from reviews to TF--IDF features
+
+Each text string below is a document. `TfidfVectorizer` will create one row per review and one column per selected term. The values give more weight to terms that are common in one review but less common across the collection."""),
+    student_code("""reviews = np.array([
+    "The workshop was clear and the examples were helpful.",
+    "Helpful explanations made the difficult material manageable.",
+    "The examples were confusing and the pace was too fast.",
+    "I enjoyed the activity, but the instructions were unclear.",
+    "Clear instructions and useful examples made this worthwhile.",
+    "The session was rushed and not very helpful.",
+    "I would recommend this thoughtful and engaging workshop.",
+    "The explanation was boring and difficult to follow.",
+])
+sentiment = np.array([1, 1, 0, 0, 1, 0, 1, 0])
+
+vectorizer = TfidfVectorizer(stop_words="english")
+tfidf = vectorizer.fit_transform(reviews)
+tfidf_table = pd.DataFrame(tfidf.toarray(), columns=vectorizer.get_feature_names_out())
+print("TF--IDF matrix shape:", tfidf.shape)
+tfidf_table.round(2)"""),
+    student_markdown("""### Task 3A — Read the matrix
+
+Choose one review. Identify two nonzero terms in its row. Explain why a term can have a nonzero TF--IDF value in one review but zero in another.
+
+> **YOUR ANSWER:**"""),
+    student_markdown("""### Task 3B — Add bigrams
+
+Change `ngram_range` to `(1, 2)` in a new vectorizer. Compare the new matrix shape and locate one bigram. Why might the bigram `not very` matter for sentiment, even if both words are individually common?
+
+> **YOUR ANSWER:**"""),
+    student_code("""# TODO: create a TF--IDF vectorizer that includes unigrams and bigrams.
+# bigram_vectorizer = ...
+# bigram_tfidf = bigram_vectorizer.fit_transform(reviews)
+# print(bigram_tfidf.shape)
+# print(bigram_vectorizer.get_feature_names_out()[:20])"""),
+    student_markdown("""### Task 3C — A small sentiment classifier
+
+Complete the split and pipeline below. This dataset is intentionally tiny: the objective is to trace the workflow, not to claim a reliable accuracy number.
+
+> Hint: use `stratify=sentiment` so the train and test splits contain both labels."""),
+    student_code("""X_train_text, X_test_text, y_train_text, y_test_text = train_test_split(
+    reviews, sentiment, test_size=0.25, random_state=RANDOM_STATE,
+    stratify=sentiment
+)
+
+sentiment_model = Pipeline([
+    ("tfidf", TfidfVectorizer(ngram_range=(1, 2))),
+    ("classifier", LogisticRegression(max_iter=1000)),
+])
+# TODO: fit sentiment_model on X_train_text and y_train_text
+# TODO: make test predictions and display a confusion matrix
+"""),
+    student_markdown("""### Checkpoint 3
+
+Suppose the model predicts negative for a genuinely positive review. Is that a false positive or false negative? What kind of language could make a bag-of-words/TF--IDF model make that error?
+
+> **YOUR ANSWER:**"""),
+    student_markdown("""## Part 4 — Dimension reduction and topic directions
+
+The TF--IDF matrix is sparse and has one column per term. Truncated SVD finds a few directions that summarize co-occurring terms. For sparse text this is often called latent semantic analysis (LSA). It is related to PCA, but does not center the sparse matrix.
+
+We will use 2 components so we can visualize the documents. A component is not automatically a named topic; we inspect high-weight terms and documents before assigning a tentative human label."""),
+    student_code("""topic_model = TruncatedSVD(n_components=2, random_state=RANDOM_STATE)
+topic_coordinates = topic_model.fit_transform(tfidf)
+terms = vectorizer.get_feature_names_out()
+
+for number, component in enumerate(topic_model.components_, start=1):
+    top_terms = terms[component.argsort()[-6:]][::-1]
+    print(f"Component {number}: {', '.join(top_terms)}")
+
+plt.figure(figsize=(7, 5))
+colors = np.where(sentiment == 1, "tab:blue", "tab:orange")
+plt.scatter(topic_coordinates[:, 0], topic_coordinates[:, 1], c=colors, s=80)
+for i, review in enumerate(reviews):
+    plt.annotate(str(i + 1), (topic_coordinates[i, 0], topic_coordinates[i, 1]))
+plt.xlabel("latent direction 1")
+plt.ylabel("latent direction 2")
+plt.show()"""),
+    student_markdown("""### Task 4A — Interpret responsibly
+
+1. Give each component a tentative label based on its top terms.
+2. Choose two nearby documents in the plot. Do they share wording, sentiment, or both?
+3. Why should we not call a component an objective ``topic'' without checking the source documents?
+
+> **YOUR ANSWER:**"""),
+    student_markdown("""### Optional homework extension 4*
+
+Try `n_components=3`. Record the top terms for the third component. Does it look coherent? Explain why changing the number of components changes the interpretation even though the original reviews did not change."""),
+    student_markdown("""## Part 5 — Similarity and a tiny recommender
+
+The matrix below records ratings for four movies by five users. Empty values are unknown ratings, not zeros. We fill missing entries with each movie's observed mean only for this small demonstration, then compare movies with cosine similarity.
+
+This is a teaching approximation. The full recommendation notebook uses MovieLens data, centering, and a larger item--user matrix."""),
+    student_code("""movie_ratings = pd.DataFrame(
+    {
+        "User 1": [5, 4, np.nan, 1],
+        "User 2": [4, 5, 2, np.nan],
+        "User 3": [5, 4, 1, 2],
+        "User 4": [np.nan, 5, 1, 2],
+        "User 5": [4, np.nan, 2, 1],
+    },
+    index=["Adventure", "Space Adventure", "Quiet Drama", "Horror"],
+)
+movie_ratings"""),
+    student_code("""# Fill missing values by each movie's mean for this small similarity exercise.
+filled_ratings = movie_ratings.T.fillna(movie_ratings.mean(axis=1)).T
+similarity = pd.DataFrame(
+    cosine_similarity(filled_ratings),
+    index=filled_ratings.index, columns=filled_ratings.index
+)
+similarity.round(2)"""),
+    student_markdown("""### Task 5A — Make a recommendation
+
+1. Which movie is most similar to `Adventure` besides itself?
+2. Explain why cosine similarity is high or low by looking at rating patterns, not only genres.
+3. What is one problem with filling missing ratings by a mean?
+
+> **YOUR ANSWER:**"""),
+    student_markdown("""## Part 6 — Putting it all together
+
+In one short paragraph, connect the four stages of today’s work:
+
+1. numerical features and regression;
+2. text represented as TF--IDF features;
+3. latent directions from truncated SVD;
+4. similarity between rating vectors.
+
+Name one modeling decision from today that could change a result (for example, train/test split, stop words, number of components, missing-value handling, or similarity metric).
+
+> **YOUR ANSWER:**"""),
+    student_markdown("""## Homework - Choose Your Own
+
+Complete any unfinished workshop tasks first. Then choose **one** extension:
+
+- **Regression:** compare a two-feature and full regression model using test MSE.
+- **NLP:** add two realistic reviews and describe how vocabulary/TF--IDF weights change.
+- **Topics:** compare 2 and 3 latent components using top terms and document locations.
+- **Recommendations:** replace mean filling with a different explicit rule and explain how the similarity matrix changes.
+
+Submit code, outputs, and concise written interpretations. The goal is to justify choices, not to optimize a score."""),
+    student_code(""""""),
+]
+
+
+def ensure_practice_notebook() -> None:
+    """Create the practice notebook without overwriting later instructor edits."""
+    path = MODULE / PRACTICE_FILENAME
+    if path.exists():
+        return
+    notebook = {
+        "cells": PRACTICE_CELLS,
+        "metadata": {
+            "colab": {"provenance": []},
+            "course": {"audience": "student", "module": 2, "lesson": 7},
+            "kernelspec": {"display_name": "Python 3 (ipykernel)", "language": "python", "name": "python3"},
+            "language_info": {"name": "python", "version": "3"},
+        },
+        "nbformat": 4,
+        "nbformat_minor": 5,
+    }
+    path.write_text(json.dumps(notebook, indent=1) + "\n", encoding="utf-8")
+    print(path.relative_to(ROOT))
+
 
 
 def repair_latex(text: str) -> str:
@@ -502,6 +765,7 @@ def main() -> None:
             notebook["cells"].extend(TOPIC_MODELING)
         path.write_text(json.dumps(notebook, indent=1) + "\n", encoding="utf-8")
         print(path.relative_to(ROOT))
+    ensure_practice_notebook()
 
 
 if __name__ == "__main__":
