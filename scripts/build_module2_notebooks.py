@@ -63,7 +63,7 @@ Describe one supervised-learning problem from your field. Name its features, tar
 > **YOUR ANSWER:**"""),
     ],
     "02_NLP_TFIDF.ipynb": [
-        markdown(r"""## Part 0 — Build a bag-of-words matrix by hand
+        markdown(r"""## Part 1 — Build a bag-of-words matrix by hand
 
 Start with two documents: A = `cats chase mice` and B = `dogs chase cats`. Using vocabulary `[cats, chase, dogs, mice]`, A becomes $[1,1,0,1]$ and B becomes $[1,1,1,0]$. The rows are documents and the columns are vocabulary terms. This **document–term matrix** retains counts, but not word order, grammar, or most meaning."""),
         code("""tiny_documents = ["cats chase mice", "dogs chase cats"]
@@ -96,7 +96,7 @@ Lowercasing merges `Excellent` and `excellent`. Stop-word removal can save space
 Compare the unigram and bigram feature matrices. Find one bigram that adds information a unigram loses. Propose a preprocessing rule for product reviews and one possible downside.
 
 > **YOUR ANSWER:**"""),
-        markdown("""## Vocabulary checkpoint
+        markdown("""### Vocabulary checkpoint
 
 - **Corpus:** the full document collection.
 - **Vocabulary:** the chosen unique terms/features.
@@ -108,7 +108,7 @@ Which of these changes when a new document has a new word? Which changes when an
 > **YOUR ANSWER:**"""),
     ],
     "03_NLP_SentimentAnalysis.ipynb": [
-        markdown("""## Part 0 — From a score to a decision
+        markdown("""## Part 3 — From a score to a decision
 
 Logistic regression predicts a probability between 0 and 1, then a threshold (often 0.5) turns it into a class. Text features are TF–IDF values, while sentiment labels are human measurements with uncertainty—not unquestionable facts."""),
         code("""examples = ["excellent and useful", "cold and disappointing", "not bad"]
@@ -119,7 +119,7 @@ for review, probability in zip(examples, sentiment_model.predict_proba(examples)
 Predict each example’s label before running the cell. If the model disagrees, consider negation, unfamiliar words, and ambiguity.
 
 > **YOUR ANSWER:**"""),
-        markdown("""## Part 3 — Baselines and class balance
+        markdown("""## Part 4 — Baselines and class balance
 
 A classifier should outperform a sensible baseline. If 90% of reviews are positive, an always-positive classifier earns 90% accuracy while learning nothing about negative reviews. Precision asks whether positive predictions are correct; recall asks whether truly positive examples are found. The right metric depends on the cost of each error."""),
         code("""majority_label = int(np.mean(y_train) >= 0.5)
@@ -135,7 +135,7 @@ If negative reviews are sent to a support team, which error is worse: flagging a
 Sentiment systems can mishandle sarcasm, quoted language, dialect, genre, and context-dependent terms. Test on representative held-out data, document annotation rules, and retain a human-review or correction route when errors can affect people."""),
     ],
     "04_DimensionReduction_PCA.ipynb": [
-        markdown(r"""## Part 0 — Centering, scaling, and directions of variation
+        markdown(r"""## Part 3 — Centering, scaling, and directions of variation
 
 PCA finds directions in which observations vary most. Centering subtracts each feature’s mean; scaling is often important when units differ. For centered $X$, the covariance matrix is
 
@@ -154,7 +154,7 @@ plt.legend(); plt.show()"""),
 Estimate the fewest components that preserve 90% of explained variance. Why can a two-dimensional plot still be useful even if it preserves much less?
 
 > **YOUR ANSWER:**"""),
-        markdown("""## Part 3 — Reconstruction and information loss
+        markdown("""## Part 4 — Reconstruction and information loss
 
 Projection to fewer components is lossy. `inverse_transform` maps a reduced point back to the original feature space, producing an approximation. Broad structure can remain while fine detail disappears—the same principle behind low-rank image compression."""),
         code("""scaler = StandardScaler().fit(X_digits)
@@ -170,7 +170,7 @@ Which details disappear first in the reconstructions? Why is PCA for visualizati
 > **YOUR ANSWER:**"""),
     ],
     "05_Similarity_SVD.ipynb": [
-        markdown("""## Part 0 — Similarity depends on representation
+        markdown("""## Part 3 — Similarity depends on representation
 
 Similarity depends on both an encoding and a metric. Euclidean distance measures straight-line separation; cosine similarity measures vector angle. Cosine similarity is useful when overall document length or rating activity should not dominate comparison."""),
         code("""from sklearn.metrics.pairwise import euclidean_distances
@@ -183,7 +183,7 @@ print(np.round(euclidean_distances(documents), 2))"""),
 Compare A to B and A to C using both metrics. Which comparison changes most? Explain with vector length and direction.
 
 > **YOUR ANSWER:**"""),
-        markdown(r"""## Part 3 — Reading an SVD
+        markdown(r"""## Part 4 — Reading an SVD
 
 For a compact $m\times n$ decomposition $M=U\Sigma V^T$, columns of $U$ describe row patterns, diagonal values in $\Sigma$ measure their strength, and rows of $V^T$ describe column patterns. Keeping only the largest $k$ singular values gives a rank-$k$ approximation."""),
         code("""for k in range(1, min(M.shape) + 1):
@@ -199,7 +199,7 @@ How does $k$ affect reconstruction error? Why is low rank a form of compression,
 TF–IDF documents, images, and ratings can all be matrices. Similarity compares rows or columns directly; SVD discovers latent directions; PCA uses related directions to reduce features. Next, we use these ideas with sparse ratings."""),
     ],
     "06_RecommendationSystems.ipynb": [
-        markdown("""## Part 0 — Missing is not zero
+        markdown("""## Part 3 — Missing is not zero
 
 An empty ratings-matrix cell usually means “not rated,” not “zero stars.” Treating all missing entries as zero distorts similarity. A simple baseline is a popularity list: easy and often strong, but it can overexpose already-popular items."""),
         code("""movie_summary = (ratings.groupby("movie_id")["rating"].agg(mean_rating="mean", rating_count="size")
@@ -210,7 +210,7 @@ movie_summary.query("rating_count >= 100").sort_values("mean_rating", ascending=
 Compare cosine-neighbor recommendations for one movie with the popularity list. Which is more personalized? Which may be more dependable for a new user?
 
 > **YOUR ANSWER:**"""),
-        markdown("""## Part 3 — Evaluation and holdout data
+        markdown("""## Part 4 — Evaluation and holdout data
 
 An offline test hides ratings, builds recommendations from the remaining data, then evaluates hidden items. RMSE measures rating-prediction error; ranking metrics ask whether useful items appear near the top. Never evaluate only on ratings used to build the system."""),
         code("""eligible = subset["user_id"].value_counts()
@@ -267,12 +267,12 @@ The matrix has one row per document and one column per vocabulary term. Adding b
 Would you use character n-grams, word unigrams, or word bigrams for detecting misspellings in product reviews? Make a choice, name one benefit, and name one tradeoff.
 
 > **YOUR ANSWER:**"""),
-        markdown("""## Limits of bag of words
+        markdown("""### Limits of bag of words
 
 Bag-of-words models treat `dog bites person` and `person bites dog` as nearly identical. They also struggle with long-range context and sarcasm. These limitations motivate embeddings and transformer models, but TF–IDF remains a transparent, fast baseline—and a useful feature representation for this course."""),
     ],
     "03_NLP_SentimentAnalysis.ipynb": [
-        markdown("""## Part 4 — Read model coefficients carefully
+        markdown("""## Part 5 — Read model coefficients carefully
 
 Positive and negative coefficient lists show correlations in this small training sample. A high coefficient does not mean a word is always positive or negative; it may reflect topic, author style, or a coincidental pattern. Inspecting coefficients is a helpful diagnostic, not a causal explanation."""),
         markdown("""### Error-analysis protocol
@@ -285,7 +285,7 @@ For each mistake, record the review, true label, prediction, confidence, and a l
 The full text-classification pipeline is: collect and label text, split data, transform text to features, train a classifier, evaluate against a baseline, and inspect errors. Every step can introduce limitations worth documenting."""),
     ],
     "04_DimensionReduction_PCA.ipynb": [
-        markdown("""## Part 4 — Choosing a number of components
+        markdown("""## Part 5 — Choosing a number of components
 
 There is no universal explained-variance cutoff. Fewer components simplify visualization and can reduce noise; more components preserve more information. Choose the number using the goal: a plot may need two components, while a predictive pipeline should compare candidates with cross-validation."""),
         markdown("""### Think–pair–share
@@ -298,7 +298,7 @@ Suppose one feature is measured in dollars and another is a fraction between 0 a
 PCA rotates data to orthogonal directions ordered by variation. It can visualize, compress, and pre-process data, but it does not know the response variable or replace evaluation of a downstream task."""),
     ],
     "05_Similarity_SVD.ipynb": [
-        markdown("""## Part 4 — A metric is a choice
+        markdown("""## Part 5 — A metric is a choice
 
 Cosine similarity ignores magnitude, which is often desirable for documents but not always for ratings or purchases. Euclidean distance can be meaningful when a common scale and absolute differences matter. Select a metric based on the question, then test whether its neighbors make sense."""),
         markdown("""### Practice: choose a representation
@@ -311,7 +311,7 @@ For each case—song playlists, student exam scores, and short text messages—c
 Similarity measures direct relationships between encoded objects. SVD finds a compact set of directions that approximately reconstructs a matrix. Both depend on the data representation and can amplify its omissions."""),
     ],
     "06_RecommendationSystems.ipynb": [
-        markdown("""## Part 4 — Content-based and collaborative signals
+        markdown("""## Part 5 — Content-based and collaborative signals
 
 Content-based recommendation uses item attributes such as genres, descriptions, or TF–IDF features. Collaborative filtering uses patterns across users and items. Hybrid systems combine them: content can help a new item, while collaborative signals can discover connections not listed in metadata."""),
         markdown("""### Scenario discussion
@@ -327,7 +327,7 @@ Recommendation is a prediction-and-ranking problem with sparse, incomplete feedb
 
 
 TOPIC_MODELING = [
-    markdown(r"""## Part 5 — Topic modeling with dimension reduction
+    markdown(r"""## Part 6 — Topic modeling with dimension reduction
 
 The TF–IDF notebook represented each document as a sparse row in a document–term matrix. We can reduce that high-dimensional matrix to a few latent directions. For sparse TF–IDF data, `TruncatedSVD` is usually preferred over ordinary PCA because it works directly with sparse matrices and does not require centering every zero. This approach is often called **latent semantic analysis (LSA)**.
 
@@ -422,7 +422,7 @@ def reorder_nlp_lesson(notebook: dict) -> None:
         return next(cell for cell in cells if "".join(cell["source"]).startswith(prefix))
 
     badge, title = cells[0], cells[1]
-    manual = find("## Part 0 — Build a bag-of-words matrix by hand")
+    manual = find("## Part 1 — Build a bag-of-words matrix by hand")
     manual_code = next(cell for cell in cells if "tiny_vectorizer = CountVectorizer()" in "".join(cell["source"]))
     manual_practice = find("### Pair practice — predict before running")
     introduction = find("## From documents to vectors")
@@ -436,9 +436,9 @@ def reorder_nlp_lesson(notebook: dict) -> None:
     practice = find("### Practice")
     sparsity = find("## Part 4 — Matrix shape and sparsity")
     feature_challenge = find("### Feature-design challenge")
-    limits = find("## Limits of bag of words")
+    limits = find("### Limits of bag of words")
     summary = find("## Key ideas")
-    vocabulary = find("## Vocabulary checkpoint")
+    vocabulary = find("### Vocabulary checkpoint")
 
     manual["source"] = source("""## Part 1 — Build a bag-of-words matrix by hand
 
