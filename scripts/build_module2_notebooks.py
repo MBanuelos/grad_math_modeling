@@ -39,6 +39,65 @@ def student_code(text: str) -> dict:
     return {"cell_type": "code", "execution_count": None, "metadata": {}, "outputs": [], "source": source(text)}
 
 
+SIMILARITY_SVD_BASE = [
+    markdown("""## Part 1 — Ratings as an item–user matrix
+
+A recommender can represent ratings in a matrix: each row is a movie, each column is a user, and an entry is that user's rating of that movie. A row is therefore a movie's rating profile. Real matrices are mostly missing because most people have not rated most movies; this small, fully observed example lets us focus first on the geometry of the rows.
+
+In the next lesson, we will return to the important question of how to handle those missing ratings."""),
+    code("""import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+from sklearn.metrics.pairwise import cosine_similarity
+
+item_user = pd.DataFrame(
+    [[5, 4, 5, 4],
+     [4, 5, 4, 5],
+     [1, 2, 1, 2],
+     [2, 1, 2, 1]],
+    index=["Galaxy Quest", "Star Voyage", "Quiet Portrait", "Storm Warning"],
+    columns=["User A", "User B", "User C", "User D"],
+)
+item_user"""),
+    markdown("""### ✏️ Written response 1
+
+What does one row represent? What does one column represent? If a real user had not rated a movie, what would be missing from this table?
+
+> **YOUR ANSWER:**"""),
+    markdown(r"""## Part 2 — Direct item neighborhoods with cosine similarity
+
+To find movies with similar audiences, compare their rating-profile rows. For nonzero vectors $a$ and $b$, cosine similarity is
+
+$$\cos(\theta) = \frac{a\cdot b}{\|a\|\|b\|}.$$
+
+It is high when two rows point in similar directions. Before comparing ratings, subtract each user's average rating so the vectors describe above- and below-usual preferences rather than whether someone generally gives high scores. In this complete toy matrix, that centering is easy to see; the next lesson applies the same idea to observed MovieLens ratings."""),
+    code("""centered_profiles = item_user.sub(item_user.mean(axis=0), axis=1)
+item_similarity = pd.DataFrame(
+    cosine_similarity(centered_profiles),
+    index=item_user.index,
+    columns=item_user.index,
+)
+item_similarity.round(2)"""),
+    markdown("""### Checkpoint
+
+Which movie is the closest neighbor of `Galaxy Quest` besides itself? Describe the rating-pattern evidence. Why might a direct cosine-neighbor method struggle if two movies have very few users in common?
+
+> **YOUR ANSWER:**"""),
+]
+
+
+def reorganize_similarity_svd(notebook: dict) -> bool:
+    """Replace the original opening with an item–user-matrix progression."""
+    if len(notebook["cells"]) < 8:
+        return False
+    changed = False
+    for index, replacement in enumerate(SIMILARITY_SVD_BASE, start=2):
+        if notebook["cells"][index]["source"] != replacement["source"]:
+            notebook["cells"][index]["source"] = replacement["source"]
+            changed = True
+    return changed
+
+
 EXTENSIONS = {
     "01_SupervisedLearning.ipynb": [
         markdown(r"""## Part 3 — Residuals and the loss function
@@ -179,33 +238,65 @@ Which details disappear first in the reconstructions? Why is PCA for visualizati
 > **YOUR ANSWER:**"""),
     ],
     "05_Similarity_SVD.ipynb": [
-        markdown("""## Part 3 — Similarity depends on representation
+        markdown("""## Part 3 — From local neighbors to global structure
 
-Similarity depends on both an encoding and a metric. Euclidean distance measures straight-line separation; cosine similarity measures vector angle. Cosine similarity is useful when overall document length or rating activity should not dominate comparison."""),
-        code("""from sklearn.metrics.pairwise import euclidean_distances
-print("Cosine similarities")
-print(np.round(cosine_similarity(documents), 2))
-print("Euclidean distances")
-print(np.round(euclidean_distances(documents), 2))"""),
+Cosine similarity compares two rows at a time. That is useful for neighborhoods, but a recommender with many movies and users needs to recognize patterns shared across the *whole* item–user matrix. If several movies tend to be liked by the same groups of users, the matrix may have lower-dimensional structure even when it has many rows and columns.
+
+A low-rank approximation summarizes those shared patterns using a few latent directions. It is not another similarity metric: it is a way to model the entire matrix before comparing or estimating entries."""),
+        code("""M = centered_profiles.to_numpy(dtype=float)
+U, singular_values, Vt = np.linalg.svd(M, full_matrices=False)
+print("singular values:", singular_values.round(3))
+
+def rank_k_approximation(matrix, k):
+    U, S, Vt = np.linalg.svd(matrix, full_matrices=False)
+    return (U[:, :k] * S[:k]) @ Vt[:k, :]
+
+rank_1 = pd.DataFrame(
+    rank_k_approximation(M, 1), index=item_user.index, columns=item_user.columns
+)
+rank_1.round(1)"""),
         markdown("""### Partner check
 
-Compare A to B and A to C using both metrics. Which comparison changes most? Explain with vector length and direction.
+Compare the original ratings matrix with its rank-1 approximation. Which broad preference pattern remains? Which movie-specific or user-specific details are no longer exact?
 
 > **YOUR ANSWER:**"""),
-        markdown(r"""## Part 4 — Reading an SVD
+        markdown(r"""## Part 4 — SVD and low-rank approximation
 
-For a compact $m\times n$ decomposition $M=U\Sigma V^T$, columns of $U$ describe row patterns, diagonal values in $\Sigma$ measure their strength, and rows of $V^T$ describe column patterns. Keeping only the largest $k$ singular values gives a rank-$k$ approximation."""),
+The singular value decomposition factors an $m\times n$ matrix as
+
+$$M = U\Sigma V^T.$$
+
+For an item–user matrix, columns of $U$ describe latent item patterns, rows of $V^T$ describe latent user patterns, and the diagonal values in $\Sigma$ rank those patterns by strength. Keeping the largest $k$ singular values gives the best rank-$k$ approximation in Frobenius norm: a compact summary that preserves as much of the matrix as possible under that measure."""),
         code("""for k in range(1, min(M.shape) + 1):
-    error = np.linalg.norm(M - rank_k_approximation(M, k), ord="fro")
-    print(f"rank {k}: reconstruction error = {error:.3f}")"""),
+    approximation = rank_k_approximation(M, k)
+    error = np.linalg.norm(M - approximation, ord="fro")
+    print(f"rank {k}: reconstruction error = {error:.3f}")
+
+fig, axes = plt.subplots(1, 3, figsize=(11, 3))
+for ax, matrix, title in zip(
+    axes, [M, rank_k_approximation(M, 1), rank_k_approximation(M, 2)],
+    ["observed profiles", "rank 1 summary", "rank 2 summary"],
+):
+    image = ax.imshow(matrix, cmap="coolwarm", vmin=-2, vmax=2)
+    ax.set_title(title)
+    ax.set_xticks(range(len(item_user.columns)), item_user.columns, rotation=45, ha="right")
+    ax.set_yticks(range(len(item_user.index)), item_user.index)
+fig.colorbar(image, ax=axes, shrink=0.8, label="centered rating")
+plt.tight_layout()
+plt.show()"""),
         markdown("""### Written response 2
 
-How does $k$ affect reconstruction error? Why is low rank a form of compression, and what might it remove from a real image or dataset?
+How does $k$ affect reconstruction error? Why is a low-rank summary useful when rating profiles overlap only partially? What useful movie-specific detail could it remove?
 
 > **YOUR ANSWER:**"""),
-        markdown("""## Connect the ideas
+        markdown("""## Part 5 — Preparing for real recommendation data
 
-TF–IDF documents, images, and ratings can all be matrices. Similarity compares rows or columns directly; SVD discovers latent directions; PCA uses related directions to reduce features. Next, we use these ideas with sparse ratings."""),
+This example is intentionally complete. Real item–user matrices are sparse: an empty cell means “not rated,” not a low rating. The next lesson uses MovieLens data, centers each user's observed ratings before computing cosine item neighborhoods, and compares that direct approach with the latent-factor idea introduced here.
+
+The distinction to carry forward is:
+
+- **Neighborhood recommendation:** compare observed item rows directly with a similarity measure.
+- **Latent-factor recommendation:** use a low-rank model to describe shared item and user patterns, then use that structure to help estimate preferences."""),
     ],
     "06_RecommendationSystems.ipynb": [
         markdown("""## Part 3 — Missing is not zero
@@ -307,17 +398,17 @@ Suppose one feature is measured in dollars and another is a fraction between 0 a
 PCA rotates data to orthogonal directions ordered by variation. It can visualize, compress, and pre-process data, but it does not know the response variable or replace evaluation of a downstream task."""),
     ],
     "05_Similarity_SVD.ipynb": [
-        markdown("""## Part 5 — A metric is a choice
+        markdown("""### Exit prompt
 
-Cosine similarity ignores magnitude, which is often desirable for documents but not always for ratings or purchases. Euclidean distance can be meaningful when a common scale and absolute differences matter. Select a metric based on the question, then test whether its neighbors make sense."""),
-        markdown("""### Practice: choose a representation
-
-For each case—song playlists, student exam scores, and short text messages—choose a possible vector representation and a similarity metric. Explain one limitation of your choice.
+A new movie has been rated by only three people. Why might direct cosine neighbors be unreliable? How could a latent-factor approach help, and what information would still be unavailable for a completely unrated movie?
 
 > **YOUR ANSWER:**"""),
         markdown("""## Lesson summary
 
-Similarity measures direct relationships between encoded objects. SVD finds a compact set of directions that approximately reconstructs a matrix. Both depend on the data representation and can amplify its omissions."""),
+An item–user matrix turns rating histories into vectors. Cosine similarity builds direct item neighborhoods from those vectors. SVD finds low-rank, latent structure across the whole matrix. Both methods depend on how ratings are represented, and real recommendation data requires careful treatment of missing feedback, evaluation, and user impact."""),
+        markdown("""### Looking ahead
+
+The recommendation-systems lesson will use a much larger, sparse MovieLens matrix. It will implement centered cosine item neighborhoods and examine missingness, held-out evaluation, cold starts, and fairness; it will treat latent factors as a useful direction rather than a finished production solution."""),
     ],
     "06_RecommendationSystems.ipynb": [
         markdown("""## Part 5 — Content-based and collaborative signals
@@ -751,6 +842,8 @@ def main() -> None:
                 cell["source"] = source(repair_latex("".join(cell["source"])))
         if filename == "02_NLP_TFIDF.ipynb":
             reorder_nlp_lesson(notebook)
+        if filename == "05_Similarity_SVD.ipynb":
+            reorganize_similarity_svd(notebook)
         if not any(cell.get("metadata", {}).get("module2_extension") for cell in notebook["cells"]):
             notebook["cells"].extend(extension_cells)
         if not any(cell.get("metadata", {}).get("module2_extension_round2") for cell in notebook["cells"]):
