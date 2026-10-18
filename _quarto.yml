@@ -58,8 +58,12 @@ book:
         - Lectures/Module2_DataSimilarity/05_Similarity_SVD.ipynb
         - Lectures/Module2_DataSimilarity/06_RecommendationSystems.ipynb
         - Lectures/Module2_DataSimilarity/07_Module2_Practice.ipynb
-    - part: "Module 3 · Deep learning with PyTorch"
+    - part: "Module 3 · Nonlinear models and deep learning"
       chapters:
+        - Lectures/Module3_DeepLearning/11_DecisionTrees.ipynb
+        - Lectures/Module3_DeepLearning/12_RandomForests.ipynb
+        - Lectures/Module3_DeepLearning/13_GradientBoosting_XGBoost.ipynb
+        - Lectures/Module3_DeepLearning/14_NonlinearModelComparison.ipynb
         - Lectures/Module3_DeepLearning/15_IntroToPytorch.ipynb
         - Lectures/Module3_DeepLearning/17_PyTorch_NN.ipynb
         - Lectures/Module3_DeepLearning/18_LogisticReg.ipynb
