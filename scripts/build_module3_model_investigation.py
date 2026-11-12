@@ -159,26 +159,22 @@ Identify the target and describe the prediction task in one sentence. Is this cl
 > **YOUR RESPONSE:**"""),
     md("""## Part 2 — Create a protected test set
 
-The test set is not a prize for the highest score. It is evidence we save until after selecting a model. For Digits, Adult, and Housing, the next cell creates a test set. For HAR, it preserves the dataset's published test set. We will use cross-validation only on the remaining training data."""),
-    code("""if published_test is None:
-    split_arguments = {"test_size": 0.20, "random_state": RANDOM_STATE}
-    if task == "classification":
-        split_arguments["stratify"] = y
-    X_train, X_test, y_train, y_test = train_test_split(X, y, **split_arguments)
-else:
-    X_train, y_train = X, y
-    X_test, y_test = published_test
+The test set is not a prize for the highest score. It is evidence we save until after selecting a model. For Digits, Adult, and Housing, create a new test set containing 20% of the observations. For classification, preserve the label proportions using `stratify=y`. For HAR, use its published training and test portions rather than making a new split.
 
-# Keep the larger data options manageable while retaining the protected test set.
-maximum_training_rows = 12000
-if len(X_train) > maximum_training_rows:
-    sample_arguments = {"train_size": maximum_training_rows, "random_state": RANDOM_STATE}
-    if task == "classification":
-        sample_arguments["stratify"] = y_train
-    X_train, _, y_train, _ = train_test_split(X_train, y_train, **sample_arguments)
+### Your tasks
 
-print("development-training observations:", len(X_train))
-print("protected test observations:", len(X_test))"""),
+1. Create `X_train`, `X_test`, `y_train`, and `y_test`.
+2. Use `RANDOM_STATE` so classmates can reproduce your split.
+3. Print the number of observations in your training and protected test sets.
+4. For Adult or Housing, if runtime becomes a concern, take a reproducible sample of at most 12,000 observations from `X_train, y_train` only. Do not sample from the protected test set."""),
+    code("""# TODO 1: Create a protected test set.
+# Hint: use train_test_split for Digits, Adult, and Housing.
+# Hint: when published_test is not None, use it as X_test, y_test.
+
+# TODO 2: If needed, create a smaller development-training sample here.
+
+# TODO 3: Print the size of each split.
+"""),
     md("""## Scores used below
 
 For the classification choices, the notebook uses **accuracy**, the proportion of labels predicted correctly. Adult income has noticeably fewer higher-income observations, so it also reports **balanced accuracy**: the average accuracy computed separately for each class. A model cannot obtain a high balanced accuracy merely by predicting the more common class.
@@ -191,9 +187,17 @@ Before running any models, name the score you think should be most important for
 > **YOUR RESPONSE:**"""),
     md("""## Part 3 — Build comparable model candidates
 
-Every candidate below includes its data-preparation steps inside a pipeline. For category-valued features, the pipeline fills missing entries and turns each category into numerical indicator columns. For numerical features, the linear model also standardizes measurements so that one unit in a large-scale feature does not dominate merely because of its units.
+Every candidate below should include its data-preparation steps inside a pipeline. For category-valued features, the pipeline should fill missing entries and turn each category into numerical indicator columns. For numerical features, the linear model should standardize measurements so that one unit in a large-scale feature does not dominate merely because of its units.
 
-The candidates include a baseline, a linear model, one decision tree, a random forest, and gradient boosting. The goal is not to declare one family universally best. It is to learn which evidence supports a choice on this dataset."""),
+### Your tasks
+
+1. Identify the numerical and category-valued feature columns in `X_train`.
+2. Build a preparation workflow for a linear model: fill missing numerical values, standardize numerical values, and encode category-valued features when present.
+3. Build a preparation workflow for tree-based models. Tree-based models do not require numerical standardization, but they still need missing values handled and category-valued features encoded.
+4. Make a dictionary named `models` with a baseline, a linear model, a decision tree, a random forest, and a gradient-boosting model. Use the classifier versions for a classification dataset and the regressor versions for Housing.
+5. Create a five-fold cross-validation object. Use `StratifiedKFold` for classification and `KFold` for regression.
+
+Suggested starting points: `DummyClassifier` or `DummyRegressor` for the baseline; `LogisticRegression` or `Ridge` for the linear model; and the tree models imported below. The goal is not to declare one family universally best. It is to learn which evidence supports a choice on this dataset."""),
     code("""from sklearn.compose import ColumnTransformer
 from sklearn.dummy import DummyClassifier, DummyRegressor
 from sklearn.ensemble import (HistGradientBoostingClassifier, HistGradientBoostingRegressor,
@@ -206,53 +210,10 @@ from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import OneHotEncoder, StandardScaler
 from sklearn.tree import DecisionTreeClassifier, DecisionTreeRegressor
 
-
-def dense_one_hot_encoder():
-    # Use the current or older scikit-learn spelling for dense encoded columns.
-    try:
-        return OneHotEncoder(handle_unknown="ignore", sparse_output=False)
-    except TypeError:
-        return OneHotEncoder(handle_unknown="ignore", sparse=False)
-
-
-numeric_features = X_train.select_dtypes(include=np.number).columns.tolist()
-categorical_features = [column for column in X_train.columns if column not in numeric_features]
-
-numeric_for_linear = Pipeline([("fill missing", SimpleImputer(strategy="median")),
-                               ("standardize", StandardScaler())])
-numeric_for_trees = Pipeline([("fill missing", SimpleImputer(strategy="median"))])
-categories = Pipeline([("fill missing", SimpleImputer(strategy="most_frequent")),
-                       ("encode", dense_one_hot_encoder())])
-
-linear_prepare = ColumnTransformer([
-    ("numeric", numeric_for_linear, numeric_features),
-    ("categories", categories, categorical_features),
-])
-tree_prepare = ColumnTransformer([
-    ("numeric", numeric_for_trees, numeric_features),
-    ("categories", categories, categorical_features),
-])
-
-if task == "classification":
-    models = {
-        "baseline (most common label)": Pipeline([("prepare", tree_prepare), ("model", DummyClassifier(strategy="most_frequent"))]),
-        "logistic regression": Pipeline([("prepare", linear_prepare), ("model", LogisticRegression(max_iter=2000, random_state=RANDOM_STATE))]),
-        "decision tree (depth 8)": Pipeline([("prepare", tree_prepare), ("model", DecisionTreeClassifier(max_depth=8, min_samples_leaf=3, random_state=RANDOM_STATE))]),
-        "random forest": Pipeline([("prepare", tree_prepare), ("model", RandomForestClassifier(n_estimators=150, max_features="sqrt", min_samples_leaf=2, random_state=RANDOM_STATE, n_jobs=-1))]),
-        "gradient boosting": Pipeline([("prepare", tree_prepare), ("model", HistGradientBoostingClassifier(max_iter=150, learning_rate=0.08, max_leaf_nodes=16, l2_regularization=0.5, random_state=RANDOM_STATE))]),
-    }
-    cv = StratifiedKFold(n_splits=5, shuffle=True, random_state=RANDOM_STATE)
-    scoring = {"accuracy": "accuracy", "balanced accuracy": "balanced_accuracy"}
-else:
-    models = {
-        "baseline (training mean)": Pipeline([("prepare", tree_prepare), ("model", DummyRegressor(strategy="mean"))]),
-        "ridge regression": Pipeline([("prepare", linear_prepare), ("model", Ridge(alpha=1.0))]),
-        "decision tree (depth 10)": Pipeline([("prepare", tree_prepare), ("model", DecisionTreeRegressor(max_depth=10, min_samples_leaf=5, random_state=RANDOM_STATE))]),
-        "random forest": Pipeline([("prepare", tree_prepare), ("model", RandomForestRegressor(n_estimators=150, min_samples_leaf=3, random_state=RANDOM_STATE, n_jobs=-1))]),
-        "gradient boosting": Pipeline([("prepare", tree_prepare), ("model", HistGradientBoostingRegressor(max_iter=150, learning_rate=0.08, max_leaf_nodes=16, l2_regularization=0.5, random_state=RANDOM_STATE))]),
-    }
-    cv = KFold(n_splits=5, shuffle=True, random_state=RANDOM_STATE)
-    scoring = {"negative MAE": "neg_mean_absolute_error"}
+# TODO: complete the Part 3 tasks here.
+# Keep all preparation inside your Pipeline objects.
+# Your completed cell should define: numeric_features, categorical_features,
+# preparation workflow(s), models, cv, and scoring.
 """),
     md("""### Investigation prompt 3
 
@@ -261,23 +222,23 @@ Before fitting the candidates, make a prediction. Which model do you expect to o
 > **YOUR RESPONSE:**"""),
     md("""## Part 4 — Compare candidates with cross-validation
 
-The next cell fits each candidate five times. Each time, a different portion of the training data acts temporarily as validation data. The protected test set is still untouched.
+Write the comparison yourself. Fit every entry in `models` five times using `cross_validate`, `X_train`, `y_train`, and your cross-validation object. Create a results table that includes the mean validation score and the variation among the five validation scores for every model. The protected test set must remain untouched.
 
-For regression, the negative sign used internally by scikit-learn is reversed below so that MAE is easy to read: smaller values are better."""),
-    code("""rows = []
-for name, model in models.items():
-    scores = cross_validate(model, X_train, y_train, cv=cv, scoring=scoring, return_train_score=False)
-    row = {"model": name}
-    for score_name in scoring:
-        values = scores[f"test_{score_name}"]
-        if score_name == "negative MAE":
-            values = -values
-        row[f"mean validation {score_name}"] = values.mean()
-        row[f"validation variation ({score_name})"] = values.std()
-    rows.append(row)
+For regression, scikit-learn returns negative MAE because its scoring convention treats larger numbers as better. Reverse the sign before reporting MAE so that smaller values are better.
 
-cv_results = pd.DataFrame(rows)
-display(cv_results.round(3))"""),
+### Your tasks
+
+1. Create an empty list called `rows`.
+2. Loop through your models, cross-validate each one, and record its name, mean score, and score variation.
+3. Convert `rows` to a clearly labeled DataFrame called `cv_results`.
+4. For classification, include accuracy and balanced accuracy. For regression, report positive MAE."""),
+    code("""# TODO: Cross-validate each model and create cv_results.
+# Do not use X_test or y_test in this cell.
+
+# rows = []
+# for name, model in models.items():
+#     ...
+"""),
     md("""### Investigation prompt 4 — A score is not a model choice
 
 Use the cross-validation table to select a provisional model. Your justification must include:
@@ -291,21 +252,12 @@ Do **not** consult the protected test score yet.
 > **YOUR RESPONSE:**"""),
     md("""## Part 5 — Investigate one reasonable variation
 
-Choose one model from the table and change one meaningful setting. Examples: use a shallower or deeper decision tree, change the number of trees in the forest, or adjust the number of boosting stages. State why that setting is worth investigating before you run it. Then compare the variation using the same cross-validation object.
+Choose one model from the table and change one meaningful setting. Examples: use a shallower or deeper decision tree, change the number of trees in the forest, or adjust the number of boosting stages. State why that setting is worth investigating before you run it. Then build and compare the variation using the same cross-validation object.
 
 This is model selection: you may inspect cross-validation results because they come from the training data. Do not repeatedly use the protected test set while trying variations."""),
-    code("""# Starter: choose ONE candidate and modify one setting.
-# Example for classification; adapt the estimator name if you selected regression.
-investigation_model = Pipeline([
-    ("prepare", tree_prepare),
-    ("model", DecisionTreeClassifier(max_depth=4, min_samples_leaf=3, random_state=RANDOM_STATE))
-]) if task == "classification" else Pipeline([
-    ("prepare", tree_prepare),
-    ("model", DecisionTreeRegressor(max_depth=6, min_samples_leaf=5, random_state=RANDOM_STATE))
-])
-
-# TODO: replace the example with your planned variation, then cross-validate it.
-# investigation_scores = cross_validate(investigation_model, X_train, y_train, cv=cv, scoring=scoring)
+    code("""# TODO: Build one variation of a candidate model.
+# Then use cross_validate with X_train, y_train, cv, and scoring.
+# Add the variation to your comparison table or make a second small table.
 """),
     md("""### Investigation prompt 5
 
@@ -314,36 +266,31 @@ Describe the variation you tested. Did its cross-validation evidence change your
 > **YOUR RESPONSE:**"""),
     md("""## Part 6 — Lock the choice and evaluate once
 
-Only after writing your selection rationale should you select one model below. Fit it on all available training data and evaluate it once on the protected test set. If the final result differs from cross-validation, that is useful information about uncertainty; it is not a reason to restart selection using the test set."""),
-    code("""# Replace this string only after completing Investigation prompt 4 or 5.
-selected_name = "random forest"
-selected_model = models[selected_name].fit(X_train, y_train)
-test_predictions = selected_model.predict(X_test)
+Only after writing your selection rationale should you select one model below. Fit it on all available training data and evaluate it once on the protected test set. If the final result differs from cross-validation, that is useful information about uncertainty; it is not a reason to restart selection using the test set.
 
-print("Selected model:", selected_name)
-if task == "classification":
-    print("test accuracy:", round(accuracy_score(y_test, test_predictions), 3))
-    print("test balanced accuracy:", round(balanced_accuracy_score(y_test, test_predictions), 3))
-else:
-    print("test MAE (in $100,000 units):", round(mean_absolute_error(y_test, test_predictions), 3))
+### Your tasks
+
+1. Set `selected_name` to the key for your chosen entry in `models`, or replace that entry with your chosen variation.
+2. Fit the selected model on `X_train, y_train` and make `test_predictions` for `X_test`.
+3. Report both classification scores, or positive MAE for Housing.
+4. Do not change the model after seeing this result."""),
+    code("""# TODO: Complete the final protected-test evaluation here.
+# selected_name = ...
+# selected_model = ...
+# test_predictions = ...
 """),
     md("""## Part 7 — Look beyond one number
 
-The final score summarizes performance, but it does not reveal every kind of mistake. For classification, a confusion matrix shows which labels are confused. For regression, a residual plot shows errors: `actual value - predicted value`. A useful model review asks where and how it makes mistakes."""),
-    code("""if task == "classification":
-    from sklearn.metrics import ConfusionMatrixDisplay
-    ConfusionMatrixDisplay.from_predictions(y_test, test_predictions, xticks_rotation=45)
-    plt.title("Protected-test confusion matrix")
-    plt.show()
-else:
-    residuals = y_test - test_predictions
-    plt.figure(figsize=(7, 4))
-    plt.scatter(test_predictions, residuals, alpha=0.35)
-    plt.axhline(0, color="black", linewidth=1)
-    plt.xlabel("predicted median house value")
-    plt.ylabel("actual minus predicted value")
-    plt.title("Protected-test residual plot")
-    plt.show()"""),
+The final score summarizes performance, but it does not reveal every kind of mistake. For classification, a confusion matrix shows which labels are confused. For regression, a residual plot shows errors: `actual value - predicted value`. A useful model review asks where and how it makes mistakes.
+
+### Your tasks
+
+1. For classification, create a confusion matrix from `y_test` and `test_predictions`.
+2. For regression, calculate residuals (`y_test - test_predictions`) and make a scatter plot of predicted value versus residual.
+3. Identify one error pattern or limitation that a single summary score hides."""),
+    code("""# TODO: Make a protected-test confusion matrix or residual plot.
+# Use y_test and test_predictions created in Part 6.
+"""),
     md("""### Final investigation report
 
 Write a concise recommendation for a classmate who must use one model on this dataset.
