@@ -203,6 +203,9 @@ dls = ImageDataLoaders.from_folder(path, train="train", valid="valid", seed=42,
 
 def main():
     for filename, cells in EXERCISES.items():
+        # Lesson 14 contains its own investigation prompts and final report.
+        if filename == "14_NonlinearModelComparison.ipynb":
+            continue
         path = MODULE / filename
         notebook = json.loads(path.read_text(encoding="utf-8"))
         notebook["cells"] = [

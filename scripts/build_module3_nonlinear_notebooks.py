@@ -371,6 +371,9 @@ There is no universally best nonlinear model. A credible comparison keeps a fina
 def main():
     MODULE.mkdir(parents=True, exist_ok=True)
     for filename, cells in LESSONS.items():
+        # Lesson 14 is maintained by build_module3_model_investigation.py.
+        if filename == "14_NonlinearModelComparison.ipynb":
+            continue
         path = MODULE / filename
         path.write_text(json.dumps(notebook(cells), indent=1) + "\n", encoding="utf-8")
         print(path.relative_to(ROOT))
