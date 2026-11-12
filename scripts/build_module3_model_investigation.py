@@ -185,6 +185,32 @@ For California Housing, the notebook uses **mean absolute error (MAE)**: the ave
 Before running any models, name the score you think should be most important for your selected dataset and explain why. For Adult, compare the usefulness of ordinary accuracy and balanced accuracy.
 
 > **YOUR RESPONSE:**"""),
+    md("""## How to use a Pipeline
+
+A `Pipeline` joins several steps into one model-like object. When you call `.fit()` on a pipeline, it learns the preparation steps using training data and then fits the prediction model. When you call `.predict()`, it applies those same learned preparation steps before making predictions.
+
+This matters during cross-validation. `cross_validate` fits a fresh copy of the entire pipeline inside each training fold. That means the validation fold is not used to calculate a missing-value replacement or a standardization value. This protects against data leakage.
+
+The example below is for an all-numerical classification problem. It fills missing values, standardizes each feature, and fits logistic regression. `named_steps` lets you inspect the individual pieces. This is an example of the pattern; it is not the completed solution for Part 3."""),
+    code("""from sklearn.impute import SimpleImputer
+from sklearn.linear_model import LogisticRegression
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import StandardScaler
+
+numerical_example = Pipeline([
+    ("fill missing values", SimpleImputer(strategy="median")),
+    ("standardize", StandardScaler()),
+    ("model", LogisticRegression(max_iter=2000, random_state=RANDOM_STATE)),
+])
+
+numerical_example.named_steps"""),
+    md("""### Reading the example
+
+- `SimpleImputer` replaces a missing numerical value with the median learned from the training data.
+- `StandardScaler` changes each numerical feature to a common scale using the training-data mean and spread.
+- `LogisticRegression` is the final prediction model.
+
+For a dataset with category-valued features, Part 3 will also use `ColumnTransformer` and `OneHotEncoder`. `ColumnTransformer` lets one pipeline prepare numerical columns one way and category-valued columns another way. The important structure remains the same: preparation steps and the model stay together in one pipeline."""),
     md("""## Part 3 — Build comparable model candidates
 
 Every candidate below should include its data-preparation steps inside a pipeline. For category-valued features, the pipeline should fill missing entries and turn each category into numerical indicator columns. For numerical features, the linear model should standardize measurements so that one unit in a large-scale feature does not dominate merely because of its units.
